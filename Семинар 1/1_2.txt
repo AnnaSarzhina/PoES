@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int a, b, c;
+    printf("Введите значения катетов треугольника\n");
+    scanf("%d%d", &a, &b); 
+    c = pow(a,2) + pow(b,2);
+    c = sqrt(c);
+printf("Значение гипотенузы треугольника равно %d\n",c);
+}

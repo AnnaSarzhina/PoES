@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+int main() {
+    int n, fact;
+    printf("Введите факториал\n");
+    scanf("%d", &n); 
+  
+for (fact=1; n>=1; n-=2)
+    {fact=fact*(n);}
+printf("Двойной факториал равен %d\n",fact);
+}

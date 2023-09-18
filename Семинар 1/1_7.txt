@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+int main() {
+    int a,b,c;
+    printf("Введите два целых числа\n");
+    scanf("%d%d", &a, &b); 
+    c = sqrt(a*b);
+printf("Среднее геометрическое двух заданных чисел %d\n",c);
+}

@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main() {
+    int N;
+    printf("Введите число N: ");
+    scanf("%d", &N);
+
+    int power = 0;
+    int result = 1;
+
+    while (result < N) {
+        result *= 2;
+        power++;
+    }
+
+    if (result == N) {
+        printf("%d является степенью числа 2^%d\n", N, power);
+    } else {
+        printf("%d не является степенью числа 2\n", N);
+    }
+
+    return 0;
+}
