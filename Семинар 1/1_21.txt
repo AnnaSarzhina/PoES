@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+int main() {
+    int N;
+    printf("Введите натуральное число N: ");
+    scanf("%d", &N);
+
+    while (N > 0) {
+        int d = N % 10;
+        printf("%d", d); 
+        N /= 10; 
+    }
+
+    return 0;
+}
