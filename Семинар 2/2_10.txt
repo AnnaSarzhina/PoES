@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main() {
+    int size;
+    printf("Введите размер массива: ");
+    scanf("%d", &size);
+
+    if (size <= 0) {
+        printf("Размер массива должен быть положительным.\n");
+        return 1;
+    }
+
+    int arr[size];
+
+    printf("Введите элементы массива:\n");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Находим максимальный по модулю элемент и его индекс
+    int maxAbsValue = abs(arr[0]);
+    int maxAbsIndex = 0;
+
+    for (int i = 1; i < size; i++) {
+        int absValue = abs(arr[i]);
+        if (absValue > maxAbsValue) {
+            maxAbsValue = absValue;
+            maxAbsIndex = i;
+        }
+    }
+
+    arr[maxAbsIndex] = -arr[maxAbsIndex];
+
+    printf("Массив с измененным знаком у максимального по модулю элемента:\n");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
