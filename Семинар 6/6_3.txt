@@ -1,0 +1,48 @@
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    LinkedList() : head(nullptr) {}
+
+    void insert(int value) {
+        Node* newNode = new Node(value);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    bool search(int value) {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->data == value)
+                return true;
+            current = current->next;
+        }
+        return false;
+    }
+};
+
+int main() {
+    LinkedList linkedList;
+
+    linkedList.insert(5);
+    linkedList.insert(3);
+    linkedList.insert(7);
+    linkedList.insert(2);
+    linkedList.insert(4);
+
+    std::cout << (linkedList.search(4) ? "Found" : "Not Found") << std::endl;
+    std::cout << (linkedList.search(9) ? "Found" : "Not Found") << std::endl;
+
+    return 0;
+}

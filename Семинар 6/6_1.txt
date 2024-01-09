@@ -1,0 +1,67 @@
+#include <iostream>
+
+class TreeNode {
+public:
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class BinarySearchTree {
+private:
+    TreeNode* root;
+
+    TreeNode* insert(TreeNode* node, int value) {
+        if (node == nullptr)
+            return new TreeNode(value);
+
+        if (value < node->data)
+            node->left = insert(node->left, value);
+        else if (value > node->data)
+            node->right = insert(node->right, value);
+
+        return node;
+    }
+
+    bool search(TreeNode* node, int value) {
+        if (node == nullptr)
+            return false;
+
+        if (value == node->data)
+            return true;
+        else if (value < node->data)
+            return search(node->left, value);
+        else
+            return search(node->right, value);
+    }
+
+public:
+    BinarySearchTree() : root(nullptr) {}
+
+    void insert(int value) {
+        root = insert(root, value);
+    }
+
+    bool search(int value) {
+        return search(root, value);
+    }
+};
+
+int main() {
+    BinarySearchTree bst;
+
+    bst.insert(5);
+    bst.insert(3);
+    bst.insert(7);
+    bst.insert(2);
+    bst.insert(4);
+    bst.insert(6);
+    bst.insert(8);
+
+    std::cout << (bst.search(4) ? "Found" : "Not Found") << std::endl;
+    std::cout << (bst.search(9) ? "Found" : "Not Found") << std::endl;
+
+    return 0;
+}

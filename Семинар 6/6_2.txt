@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+class MaxHeap {
+private:
+    std::vector<int> heap;
+
+public:
+    void insert(int value) {
+        heap.push_back(value);
+        std::push_heap(heap.begin(), heap.end());
+    }
+
+    bool search(int value) {
+        return std::find(heap.begin(), heap.end(), value) != heap.end();
+    }
+};
+
+int main() {
+    MaxHeap heap;
+
+    heap.insert(5);
+    heap.insert(3);
+    heap.insert(7);
+    heap.insert(2);
+    heap.insert(4);
+    heap.insert(6);
+    heap.insert(8);
+
+    std::cout << (heap.search(4) ? "Found" : "Not Found") << std::endl;
+    std::cout << (heap.search(9) ? "Found" : "Not Found") << std::endl;
+
+    return 0;
+}
