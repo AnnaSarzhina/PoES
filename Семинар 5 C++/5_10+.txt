@@ -1,0 +1,127 @@
+#include <iostream>
+#include <vector>
+
+// Базовый класс "Транспортная карта"
+class TransportCard {
+protected:
+    double monthlyPayment;
+    double balance;
+public:
+    TransportCard(double monthlyPayment) : monthlyPayment(monthlyPayment), balance(0.0) {}
+    virtual void topUp(double amount) = 0; 
+    virtual bool makePayment() = 0; 
+};
+
+// Предок "Карта с фиксированной оплатой в месяц"
+class FixedPaymentCard : public TransportCard {
+private:
+    std::string cardType;
+public:
+    FixedPaymentCard(double monthlyPayment, std::string cardType) : TransportCard(monthlyPayment), cardType(cardType) {}
+    void topUp(double amount) override {
+        balance += amount; 
+    }
+    bool makePayment() override {
+        if (balance >= monthlyPayment) {
+            balance -= monthlyPayment; 
+            return true;
+        }
+        return false;
+    }
+};
+
+// Предок "Карта с поразовой оплатой"
+class PerRideCard : public TransportCard {
+private:
+    int numRides;
+public:
+    PerRideCard(double balance) : TransportCard(0.0), numRides(0) {
+        this->balance = balance;
+    }
+    void topUp(double amount) override {
+        balance += amount; 
+    }
+    bool makePayment() override {
+        if (numRides > 0) {
+            numRides--; 
+            return true;
+        } else if (balance >= monthlyPayment) {
+            balance -= monthlyPayment; 
+            return true;
+        }
+        return false;
+    }
+    void addRides(int num) {
+        numRides += num; 
+    }
+};
+
+// Класс "Банкомат"
+class ATM {
+public:
+    void topUpCard(TransportCard* card, double amount) {
+        card->topUp(amount); 
+    }
+};
+
+// Класс "Мобильное приложение"
+class MobileApp {
+public:
+    void topUpCard(TransportCard* card, double amount) {
+        card->topUp(amount); 
+    }
+};
+
+// Класс "Терминал оплаты"
+class PaymentTerminal {
+private:
+    int numPasses;
+    double totalRevenue;
+    int numRides;
+public:
+    PaymentTerminal() : numPasses(0), totalRevenue(0.0), numRides(0) {}
+    void checkPayment(TransportCard* card) {
+        if (card->makePayment()) {
+            numPasses++; 
+            totalRevenue += card->monthlyPayment; 
+            numRides++; 
+        }
+    }
+    void printStatistics() {
+        std::cout << "Проходимость: " << numPasses << std::endl;
+        std::cout << "Выручка: " << totalRevenue << std::endl;
+        std::cout << "Количество поездок: " << numRides << std::endl;
+    }
+};
+
+int main() {
+    // Создание объектов карт
+    FixedPaymentCard studentCard(100.0, "Студенческая");
+    FixedPaymentCard schoolCard(80.0, "Школьная");
+    FixedPaymentCard socialCard(50.0, "Социальная");
+    PerRideCard perRideCard(30.0);
+
+    // Создание объектов банкомата, мобильного приложения и терминала оплаты
+    ATM atm;
+    MobileApp mobileApp;
+    PaymentTerminal paymentTerminal;
+
+    // Пополнение карт через банкомат и мобильное приложение
+    atm.topUpCard(&studentCard, 50.0);
+    mobileApp.topUpCard(&schoolCard, 30.0);
+    atm.topUpCard(&perRideCard, 20.0);
+
+    // Добавление поштучных поездок на карту с поразовой оплатой
+    perRideCard.addRides(5);
+
+    // Проверка оплаты поездки через терминал оплаты
+    paymentTerminal.checkPayment(&studentCard);
+    paymentTerminal.checkPayment(&schoolCard);
+    paymentTerminal.checkPayment(&socialCard);
+    paymentTerminal.checkPayment(&perRideCard);
+
+    // Вывод статистики терминала оплаты
+    paymentTerminal.printStatistics();
+
+    return 0;
+}

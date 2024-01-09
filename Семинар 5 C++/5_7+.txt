@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+
+class Children {
+private:
+    std::string name;
+    std::string surname;
+    int age;
+
+public:
+    void setData(const std::string& childName, const std::string& childSurname, int childAge) {
+        name = childName;
+        surname = childSurname;
+        age = childAge;
+    }
+
+    void displayData() {
+        std::cout << "Name: " << name << std::endl;
+        std::cout << "Surname: " << surname << std::endl;
+        std::cout << "Age: " << age << std::endl;
+    }
+};
+
+int main() {
+    Children child1;
+    child1.setData("John", "Doe", 8);
+
+    Children child2;
+    child2.setData("Jane", "Smith", 10);
+
+    child1.displayData();
+    std::cout << std::endl;
+    child2.displayData();
+
+    return 0;
+}

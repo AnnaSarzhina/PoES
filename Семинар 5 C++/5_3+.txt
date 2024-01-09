@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+
+class Shape {
+public:
+    virtual double getVolume() const = 0;
+};
+
+class Box : public Shape {
+private:
+    double capacity;
+    std::vector<Shape*> shapes;
+
+public:
+    Box(double capacity) : capacity(capacity) {}
+
+    bool add(Shape* shape) {
+        if (getRemainingCapacity() >= shape->getVolume()) {
+            shapes.push_back(shape);
+            return true;
+        }
+        return false;
+    }
+
+    double getRemainingCapacity() const {
+        double usedCapacity = 0;
+        for (const auto& shape : shapes) {
+            usedCapacity += shape->getVolume();
+        }
+        return capacity - usedCapacity;
+    }
+
+    double getVolume() const override {
+        return capacity;
+    }
+};
+
+class Sphere : public Shape {
+private:
+    double radius;
+
+public:
+    Sphere(double radius) : radius(radius) {}
+
+    double getVolume() const override {
+        return (4.0 / 3.0) * 3.14159 * radius * radius * radius;
+    }
+};
+
+class Cube : public Shape {
+private:
+    double side;
+
+public:
+    Cube(double side) : side(side) {}
+
+    double getVolume() const override {
+        return side * side * side;
+    }
+};
+
+int main() {
+    Box box(100.0);
+
+    Sphere sphere(5.0);
+    if (box.add(&sphere)) {
+        std::cout << "Added sphere to the box." << std::endl;
+    } else {
+        std::cout << "Not enough space to add sphere to the box." << std::endl;
+    }
+
+    Cube cube(10.0);
+    if (box.add(&cube)) {
+        std::cout << "Added cube to the box." << std::endl;
+    } else {
+        std::cout << "Not enough space to add cube to the box." << std::endl;
+    }
+
+    return 0;
+}

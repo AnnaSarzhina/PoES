@@ -1,0 +1,138 @@
+#include <iostream>
+#include <vector>
+
+class Matrix {
+private:
+    std::vector<std::vector<int>> data;
+    int rows;
+    int cols;
+
+public:
+    Matrix(int rows, int cols) : rows(rows), cols(cols) {
+        data.resize(rows, std::vector<int>(cols, 0));
+    }
+
+    Matrix(const Matrix& other) : rows(other.rows), cols(other.cols), data(other.data) {}
+
+    // a. Сложение матриц
+    Matrix operator+(const Matrix& other) const {
+        if (rows != other.rows || cols != other.cols) {
+            throw std::invalid_argument("Matrix dimensions must match for addition.");
+        }
+
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // a. Вычитание матриц
+    Matrix operator-(const Matrix& other) const {
+        if (rows != other.rows || cols != other.cols) {
+            throw std::invalid_argument("Matrix dimensions must match for subtraction.");
+        }
+
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // b. Умножение матрицы на число
+    Matrix operator*(int scalar) const {
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = data[i][j] * scalar;
+            }
+        }
+
+        return result;
+    }
+
+    // c. Произведение двух матриц
+    Matrix operator*(const Matrix& other) const {
+        if (cols != other.rows) {
+            throw std::invalid_argument("Number of columns in the first matrix must match the number of rows in the second matrix for multiplication.");
+        }
+
+        Matrix result(rows, other.cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < cols; k++) {
+                    result.data[i][j] += data[i][k] * other.data[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // d. Транспонированная матрица
+    Matrix transpose() const {
+        Matrix result(cols, rows);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[j][i] = data[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // e. Возведение матрицы в степень
+    Matrix power(int exponent) const {
+        if (rows != cols) {
+            throw std::invalid_argument("Matrix must be square for exponentiation.");
+        }
+
+        if (exponent < 0) {
+            throw std::invalid_argument("Exponent must be non-negative.");
+        }
+
+        Matrix result(*this);
+        Matrix temp(*this);
+
+        for (int i = 1; i < exponent; i++) {
+            result = result * temp;
+        }
+
+        return result;
+    }
+};
+
+int main() {
+    Matrix matrix1(2, 2);
+    matrix1 = {{1, 2}, {3, 4}};
+
+    Matrix matrix2(2, 2);
+    matrix2 = {{5, 6}, {7, 8}};
+
+    // a. Сложение матриц
+    Matrix sum = matrix1 + matrix2;
+
+    // a. Вычитание матриц
+    Matrix difference = matrix1 - matrix2;
+
+    // b. Умножение матрицы на число
+    Matrix scalarProduct = matrix1 * 3;
+
+    // c. Произведение двух матриц
+    Matrix matrixProduct = matrix1 * matrix2;
+
+    // d. Транспонированная матрица
+    Matrix transposed = matrix1.transpose();
+
+    // e. Возведение матрицы в степень
+    Matrix power = matrix1.power(2);
+
+    return 0;
+}

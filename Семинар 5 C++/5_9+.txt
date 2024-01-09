@@ -1,0 +1,110 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
+// Базовый класс "Работник"
+class Worker {
+protected:
+    int id;
+    std::string name;
+public:
+    Worker(int id, std::string name) : id(id), name(name) {}
+    virtual double calculateMonthlySalary() = 0; // Абстрактный метод для расчета среднемесячной зарплаты
+};
+
+// Предок "Почасовщик"
+class HourlyWorker : public Worker {
+private:
+    double hourlyRate;
+public:
+    HourlyWorker(int id, std::string name, double hourlyRate) : Worker(id, name), hourlyRate(hourlyRate) {}
+    double calculateMonthlySalary() override {
+        return 20.8 * 8 * hourlyRate; // Формула для расчета среднемесячной зарплаты почасовщика
+    }
+};
+
+// Предок "Работник с фиксированной оплатой"
+class FixedSalaryWorker : public Worker {
+private:
+    double monthlySalary;
+public:
+    FixedSalaryWorker(int id, std::string name, double monthlySalary) : Worker(id, name), monthlySalary(monthlySalary) {}
+    double calculateMonthlySalary() override {
+        return monthlySalary; // Среднемесячная зарплата работника с фиксированной оплатой
+    }
+};
+
+// Функция для сравнения работников по убыванию среднемесячной зарплаты
+bool compareWorkers(const Worker* w1, const Worker* w2) {
+    if (w1->calculateMonthlySalary() == w2->calculateMonthlySalary()) {
+        return w1->name < w2->name; // Сортировка по имени в алфавитном порядке при совпадении зарплаты
+    }
+    return w1->calculateMonthlySalary() > w2->calculateMonthlySalary();
+}
+
+int main() {
+    std::vector<Worker*> workers;
+
+    // Добавляем работников в список
+    workers.push_back(new HourlyWorker(1, "Иван", 10.0));
+    workers.push_back(new FixedSalaryWorker(2, "Петр", 5000.0));
+    workers.push_back(new HourlyWorker(3, "Анна", 15.0));
+    workers.push_back(new FixedSalaryWorker(4, "Мария", 6000.0));
+
+    // Сортируем работников по убыванию среднемесячной зарплаты
+    std::sort(workers.begin(), workers.end(), compareWorkers);
+
+    // Выводим идентификатор, имя и среднемесячную зарплату для всех работников
+    for (const auto& worker : workers) {
+        std::cout << "Идентификатор: " << worker->id << ", Имя: " << worker->name << ", Среднемесячная зарплата: " << worker->calculateMonthlySalary() << std::endl;
+    }
+
+    // Выводим первые 5 имен работников
+    std::cout << "Первые 5 имен работников:" << std::endl;
+    for (int i = 0; i < 5 && i < workers.size(); i++) {
+        std::cout << workers[i]->name << std::endl;
+    }
+
+    // Выводим последние 3 идентификатора работников
+    std::cout << "Последние 3 идентификатора работников:" << std::endl;
+    for (int i = workers.size() - 1; i >= 0 && i >= workers.size() - 3; i--) {
+        std::cout << workers[i]->id << std::endl;
+    }
+
+    // Записываем коллекцию в файл
+    std::ofstream outputFile("workers.txt");
+    if (outputFile.is_open()) {
+        for (const auto& worker : workers) {
+            outputFile << worker->id << " " << worker->name << " " << worker->calculateMonthlySalary() << std::endl;
+        }
+        outputFile.close();
+    }
+
+    // Читаем коллекцию из файла
+    std::ifstream inputFile("workers.txt");
+    if (inputFile.is_open()) {
+        int id;
+        std::string name;
+        double salary;
+        while (inputFile >> id >> name >> salary) {
+            // Создаем объекты работников и добавляем их в список
+            if (salary == 20.8 * 8 * 10.0) {
+                workers.push_back(new HourlyWorker(id, name, salary));
+            } else {
+                workers.push_back(new FixedSalaryWorker(id, name, salary));
+            }
+        }
+        inputFile.close();
+    }
+
+    // Обработка некорректного формата входного файла
+    // Если формат файла некорректен, можно вывести сообщение об ошибке или выполнить другие действия по обработке ошибки.
+
+    // Освобождаем память, удаляя объекты работников
+    for (const auto& worker : workers) {
+        delete worker;
+    }
+
+    return 0;
+}

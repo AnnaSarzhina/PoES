@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+
+class ArrayConverter {
+private:
+    std::vector<std::vector<int>> array;
+
+public:
+    void fillArray(const std::vector<std::vector<int>>& values) {
+        array = values;
+    }
+
+    void convertToColumns() {
+        std::vector<std::vector<int>> columns(array[0].size(), std::vector<int>(array.size()));
+
+        for (size_t i = 0; i < array.size(); i++) {
+            for (size_t j = 0; j < array[i].size(); j++) {
+                columns[j][i] = array[i][j];
+            }
+        }
+
+        array = columns;
+    }
+
+    void displayArray() {
+        for (size_t i = 0; i < array.size(); i++) {
+            for (size_t j = 0; j < array[i].size(); j++) {
+                std::cout << array[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    ArrayConverter converter;
+
+    std::vector<std::vector<int>> values = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    converter.fillArray(values);
+
+    std::cout << "Original Array:" << std::endl;
+    converter.displayArray();
+
+    converter.convertToColumns();
+
+    std::cout << "Converted Array:" << std::endl;
+    converter.displayArray();
+
+    return 0;
+}

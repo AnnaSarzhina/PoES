@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <random>
+
+class Vector {
+private:
+    double x;
+    double y;
+    double z;
+
+public:
+    // a. Конструктор с параметрами в виде списка координат x, y, z
+    Vector(double x, double y, double z) : x(x), y(y), z(z) {}
+
+    // b. Метод, вычисляющий длину вектора
+    double length() const {
+        return std::sqrt(x * x + y * y + z * z);
+    }
+
+    // c. Метод, вычисляющий скалярное произведение
+    double dotProduct(const Vector& other) const {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    // d. Метод, вычисляющий векторное произведение
+    Vector crossProduct(const Vector& other) const {
+        double resultX = y * other.z - z * other.y;
+        double resultY = z * other.x - x * other.z;
+        double resultZ = x * other.y - y * other.x;
+
+        return Vector(resultX, resultY, resultZ);
+    }
+
+    // e. Метод, вычисляющий угол между векторами
+    double angle(const Vector& other) const {
+        double dot = dotProduct(other);
+        double lengthProduct = length() * other.length();
+
+        return std::acos(dot / lengthProduct);
+    }
+
+    // f. Методы для суммы и разности
+    Vector operator+(const Vector& other) const {
+        double resultX = x + other.x;
+        double resultY = y + other.y;
+        double resultZ = z + other.z;
+
+        return Vector(resultX, resultY, resultZ);
+    }
+
+    Vector operator-(const Vector& other) const {
+        double resultX = x - other.x;
+        double resultY = y - other.y;
+        double resultZ = z - other.z;
+
+        return Vector(resultX, resultY, resultZ);
+    }
+
+    // g. Статический метод, возвращающий массив случайных векторов
+    static std::vector<Vector> generateRandomVectors(int N) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> dis(-1.0, 1.0);
+
+        std::vector<Vector> randomVectors;
+        randomVectors.reserve(N);
+
+        for (int i = 0; i < N; i++) {
+            double randomX = dis(gen);
+            double randomY = dis(gen);
+            double randomZ = dis(gen);
+
+            randomVectors.emplace_back(randomX, randomY, randomZ);
+        }
+
+        return randomVectors;
+    }
+};
+
+int main() {
+    Vector vector1(1.0, 2.0, 3.0);
+    Vector vector2(4.0, 5.0, 6.0);
+
+    // b. Вычисление длины вектора
+    double length = vector1.length();
+
+    // c. Вычисление скалярного произведения
+    double dotProduct = vector1.dotProduct(vector2);
+
+    // d. Вычисление векторного произведения
+    Vector crossProduct = vector1.crossProduct(vector2);
+
+    // e. Вычисление угла между векторами
+    double angle = vector1.angle(vector2);
+
+    // f. Вычисление суммы и разности векторов
+    Vector sum = vector1 + vector2;
+    Vector difference = vector1 - vector2;
+
+    // g. Генерация массива случайных векторов
+    std::vector<Vector> randomVectors = Vector::generateRandomVectors(5);
+
+    return 0;
+}

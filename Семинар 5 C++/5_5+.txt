@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <random>
+
+class WeightedRandom {
+private:
+    std::vector<int> values;
+    std::vector<int> weights;
+    std::random_device rd;
+    std::mt19937 gen;
+
+public:
+    WeightedRandom(const std::vector<int>& vals, const std::vector<int>& wts) : values(vals), weights(wts), gen(rd()) {}
+
+    int getRandomValue() {
+        std::discrete_distribution<int> distribution(weights.begin(), weights.end());
+        return values[distribution(gen)];
+    }
+};
+
+int main() {
+    std::vector<int> values = {1, 2, 3};
+    std::vector<int> weights = {1, 2, 10};
+
+    WeightedRandom wr(values, weights);
+
+    // Пример использования
+    for (int i = 0; i < 10; i++) {
+        int randomValue = wr.getRandomValue();
+        std::cout << randomValue << " ";
+    }
+
+    return 0;
+}
