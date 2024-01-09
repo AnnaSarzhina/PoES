@@ -1,0 +1,55 @@
+#include <iostream>
+#include <queue>
+
+struct QueueElement {
+    int data;
+    int priority;
+
+    QueueElement(int d, int p) : data(d), priority(p) {}
+};
+
+struct ComparePriority {
+    bool operator()(const QueueElement& a, const QueueElement& b) {
+        return a.priority < b.priority;
+    }
+};
+
+class PriorityQueue {
+private:
+    std::priority_queue<QueueElement, std::vector<QueueElement>, ComparePriority> pq;
+
+public:
+    void enqueue(int data, int priority) {
+        QueueElement element(data, priority);
+        pq.push(element);
+    }
+
+    int dequeue() {
+        if (!pq.empty()) {
+            int data = pq.top().data;
+            pq.pop();
+            return data;
+        } else {
+            return -1;
+        }
+    }
+
+    bool isEmpty() const {
+        return pq.empty();
+    }
+};
+
+int main() {
+    PriorityQueue priorityQueue;
+
+    priorityQueue.enqueue(10, 2);
+    priorityQueue.enqueue(20, 1);
+    priorityQueue.enqueue(30, 3);
+
+    while (!priorityQueue.isEmpty()) {
+        std::cout << "Dequeued: " << priorityQueue.dequeue() << std::endl;
+    }
+
+    return 0;
+}
+
