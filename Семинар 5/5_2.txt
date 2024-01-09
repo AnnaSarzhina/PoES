@@ -1,0 +1,37 @@
+if [ -z "$1" ]; then
+    echo "log.txt"
+    exit 1
+fi
+
+exit_code=$2
+
+while IFS= read -r line; do
+    # Разделение строки на поля, используя пробел как разделитель
+    fields=($line)
+
+    client_host=${fields[0]}
+    timestamp=${fields[3]} ${fields[4]}
+    request=${fields[5]} ${fields[6]} ${fields[7]}
+    http_status=${fields[8]}
+    bytes_transferred=${fields[9]}
+    referer=${fields[10]}
+    user_agent=${fields[11]}
+
+    echo "Хост клиента: $client_host"
+    echo "Время: $timestamp"
+    echo "HTTP-запрос: $request"
+    echo "HTTP-статус: $http_status"
+    echo "Переданные байты: $bytes_transferred"
+    echo "Реферер: $referer"
+    echo "Клиент: $user_agent"
+
+    echo "----------------------------------------"
+
+    if [ -n "$exit_code" ] && [ "$http_status" != "$exit_code" ]; then
+        continue
+    fi
+
+    echo "$line"
+
+done < "$1"
+
